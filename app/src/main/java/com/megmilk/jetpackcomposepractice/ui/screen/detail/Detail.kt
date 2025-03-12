@@ -1,4 +1,4 @@
-package com.megmilk.jetpackcomposepractice.ui.screen
+package com.megmilk.jetpackcomposepractice.ui.screen.detail
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -23,15 +23,28 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.megmilk.jetpackcomposepractice.App
 import com.megmilk.jetpackcomposepractice.R
+import com.megmilk.jetpackcomposepractice.data.repository.UserInfoRepository
 import com.megmilk.jetpackcomposepractice.ui.component.TextFieldSample
 import com.megmilk.jetpackcomposepractice.ui.theme.Screen
 
 @Composable
 fun DetailScreen(title: String, text: String, onClick: () -> Unit) {
+    val app = LocalContext.current.applicationContext as App
+    val viewModel: DetailViewModel = viewModel(
+        factory = DetailViewModelFactory(app.userInfoRepository)
+    )
+    DetailScreen(title, text, viewModel, onClick)
+}
+
+@Composable
+private fun DetailScreen(title: String, text: String, viewModel: DetailViewModel, onClick: () -> Unit) {
     Surface(
         modifier = Modifier.fillMaxSize(),// fillMaxSizeは、画面いっぱいに表示するための関数
         color = MaterialTheme.colorScheme.secondary// colorSchemeは、Material Designの色を設定するための関数
@@ -41,7 +54,7 @@ fun DetailScreen(title: String, text: String, onClick: () -> Unit) {
             TextFieldSample()
             Image(painter = painterResource(id = R.drawable.ic_launcher_foreground), contentDescription = "イラスト屋")
             Text(text = text, modifier = Modifier.height(40.dp).width(100.dp))
-            Text(text = "指定します", modifier = Modifier.background(
+            Text(text = viewModel.getInfo(), modifier = Modifier.background(
                 Color(0xFF00FF00)
             ))
             Text("Modifier",
@@ -93,6 +106,8 @@ fun DetailScreen(title: String, text: String, onClick: () -> Unit) {
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewDetail() {
-    DetailScreen(Screen.DETAIL.title, "パラメータ"){}
+private fun Preview() {
+    val repository = UserInfoRepository()
+    val viewModel = DetailViewModel(repository)
+    DetailScreen(Screen.DETAIL.title, "パラメータ", viewModel){}
 }

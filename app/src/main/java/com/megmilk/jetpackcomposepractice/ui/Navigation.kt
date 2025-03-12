@@ -6,8 +6,8 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.megmilk.jetpackcomposepractice.ui.screen.DetailScreen
-import com.megmilk.jetpackcomposepractice.ui.screen.TopScreen
+import com.megmilk.jetpackcomposepractice.ui.screen.detail.DetailScreen
+import com.megmilk.jetpackcomposepractice.ui.screen.top.TopScreen
 
 enum class Screen(val route: String, val title: String) {
     TOP("top", "トップ"),
