@@ -25,7 +25,7 @@ class Navigation {
                 composable(
                     route = Screen.TOP.route,
                 ) {
-                    TopScreen(Screen.TOP.title) {
+                    TopScreen(navController, Screen.TOP.title) {
                         navController.navigate("${Screen.DETAIL.route}/送りたいパラメータ")
                     }
                 }
@@ -36,8 +36,7 @@ class Navigation {
                     )
                 ) { backStackEntry ->
                     val text = backStackEntry.arguments?.getString("text") ?: ""
-                    DetailScreen(Screen.DETAIL.title, text) {
-                        navController.navigateUp()
+                    DetailScreen(navController, Screen.DETAIL.title, text) {
                     }
                 }
             }

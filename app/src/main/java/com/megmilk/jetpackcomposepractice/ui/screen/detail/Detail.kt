@@ -2,7 +2,6 @@ package com.megmilk.jetpackcomposepractice.ui.screen.detail
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -11,7 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material3.Button
@@ -19,12 +17,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -33,101 +26,79 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.megmilk.jetpackcomposepractice.App
 import com.megmilk.jetpackcomposepractice.R
 import com.megmilk.jetpackcomposepractice.data.repository.UserInfoRepository
+import com.megmilk.jetpackcomposepractice.ui.component.CommonScaffold
 import com.megmilk.jetpackcomposepractice.ui.component.TextFieldSample
 import com.megmilk.jetpackcomposepractice.ui.theme.Screen
 
 @Composable
-fun DetailScreen(title: String, text: String, onClick: () -> Unit) {
+fun DetailScreen(navController: NavHostController, title: String, text: String, onClick: () -> Unit) {
     val app = LocalContext.current.applicationContext as App
     val viewModel: DetailViewModel = viewModel(
         factory = DetailViewModelFactory(app.userInfoRepository)
     )
-    DetailScreen(title, text, viewModel, onClick)
+    DetailScreen(navController, title, text, viewModel, onClick)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun DetailScreen(title: String, text: String, viewModel: DetailViewModel, onClick: () -> Unit) {
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(title) },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primary, // 背景色
-                    titleContentColor = MaterialTheme.colorScheme.onPrimary, // タイトルの文字色
-                    navigationIconContentColor = MaterialTheme.colorScheme.onPrimary, // 戻るボタンの色
-                    actionIconContentColor = MaterialTheme.colorScheme.onPrimary // 右側のアクションアイコンの色 (もしあれば)
-                ),
-                navigationIcon = {
-                    IconButton(onClick = onClick) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Localized description"
-                        )
-                    }
-                }
+private fun DetailScreen(navController: NavHostController, title: String, text: String, viewModel: DetailViewModel, onClick: () -> Unit) {
+    CommonScaffold(navController, title) {
+        Column {
+            Text(text = title, modifier = Modifier.height(40.dp).width(100.dp))
+            TextFieldSample()
+            Image(painter = painterResource(id = R.drawable.ic_launcher_foreground), contentDescription = "イラスト屋")
+            Text(text = text, modifier = Modifier.height(40.dp).width(100.dp))
+            Text(text = viewModel.getInfo(), modifier = Modifier.background(
+                Color(0xFF00FF00)
+            ))
+            Text("Modifier",
+                modifier = Modifier.padding(
+                    horizontal = 16.dp,// 左右
+                    vertical = 45.dp// 上下
+                ).background(
+                    Color(color = 0xFF00FF00)
+                )
             )
-        }
-    ) { innerPadding ->
-        Box(
-            modifier = Modifier
-                .padding(innerPadding)
-        ) {
-            Column {
-                Text(text = title, modifier = Modifier.height(40.dp).width(100.dp))
-                TextFieldSample()
-                Image(painter = painterResource(id = R.drawable.ic_launcher_foreground), contentDescription = "イラスト屋")
-                Text(text = text, modifier = Modifier.height(40.dp).width(100.dp))
-                Text(text = viewModel.getInfo(), modifier = Modifier.background(
-                    Color(0xFF00FF00)
-                ))
-                Text("Modifier",
-                    modifier = Modifier.padding(
-                        horizontal = 16.dp,// 左右
-                        vertical = 45.dp// 上下
-                    ).background(
-                        Color(color = 0xFF00FF00)
-                    )
+            // 余白を開ける
+            Spacer(Modifier.size(16.dp))
+            Button(
+                onClick = {
+                    println("call")
+                },
+                // Uses ButtonDefaults.ContentPadding by default
+                contentPadding = PaddingValues(
+                    start = 20.dp,
+                    top = 12.dp,
+                    end = 20.dp,
+                    bottom = 12.dp
                 )
-                // 余白を開ける
-                Spacer(Modifier.size(16.dp))
-                Button(
-                    onClick = {
-                        println("call")
-                    },
-                    // Uses ButtonDefaults.ContentPadding by default
-                    contentPadding = PaddingValues(
-                        start = 20.dp,
-                        top = 12.dp,
-                        end = 20.dp,
-                        bottom = 12.dp
-                    )
-                ) {
-                    // Inner content including an icon and a text label
-                    Icon(
-                        Icons.Filled.Favorite,
-                        contentDescription = "Favorite",
-                        modifier = Modifier.size(ButtonDefaults.IconSize)
-                    )
-                    Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                    Text("Like")
-                }
-                // 余白を開ける
-                Spacer(Modifier.size(16.dp))
-                ExtendedFloatingActionButton(
-                    onClick = onClick,
-                    icon = {
-                        Icon(
-                            Icons.Default.Done,
-                            contentDescription = "Favorite"
-                        )
-                    },
-                    text = { Text("次へ") }
+            ) {
+                // Inner content including an icon and a text label
+                Icon(
+                    Icons.Filled.Favorite,
+                    contentDescription = "Favorite",
+                    modifier = Modifier.size(ButtonDefaults.IconSize)
                 )
+                Spacer(Modifier.size(ButtonDefaults.IconSpacing))
+                Text("Like")
             }
+            // 余白を開ける
+            Spacer(Modifier.size(16.dp))
+            ExtendedFloatingActionButton(
+                onClick = onClick,
+                icon = {
+                    Icon(
+                        Icons.Default.Done,
+                        contentDescription = "Favorite"
+                    )
+                },
+                text = { Text("次へ") }
+            )
         }
     }
 }
@@ -135,7 +106,8 @@ private fun DetailScreen(title: String, text: String, viewModel: DetailViewModel
 @Preview(showBackground = true)
 @Composable
 private fun Preview() {
+    val navController = rememberNavController()
     val repository = UserInfoRepository()
     val viewModel = DetailViewModel(repository)
-    DetailScreen(Screen.DETAIL.title, "パラメータ", viewModel){}
+    DetailScreen(navController, Screen.DETAIL.title, "パラメータ", viewModel){}
 }
