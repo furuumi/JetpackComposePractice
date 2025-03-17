@@ -10,14 +10,17 @@ import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.megmilk.jetpackcomposepractice.ui.theme.Screen
@@ -25,14 +28,20 @@ import com.megmilk.jetpackcomposepractice.ui.theme.Screen
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopScreen(title: String, onClick: () -> Unit) {
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
     Scaffold(
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             TopAppBar(
-                title = { Text("ホーム") },
+                title = { Text(title) },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primary, // 背景色
-                    titleContentColor = MaterialTheme.colorScheme.onPrimary // タイトルの文字色
+                    scrolledContainerColor = MaterialTheme.colorScheme.primary, // 背景色
+                    titleContentColor = MaterialTheme.colorScheme.onPrimary, // タイトルの文字色
+                    navigationIconContentColor = MaterialTheme.colorScheme.onPrimary, // 戻るボタンの色
+                    actionIconContentColor = MaterialTheme.colorScheme.onPrimary // 右側のアクションアイコンの色 (もしあれば)
                 ),
+                scrollBehavior = scrollBehavior,
             )
         }
     ) { innerPadding ->
@@ -40,7 +49,7 @@ fun TopScreen(title: String, onClick: () -> Unit) {
             modifier = Modifier
                 .padding(innerPadding)
         ) {
-            val fruits = listOf("Apple", "Orange", "Grape", "Peach", "Strawberry")
+            val fruits = listOf("Apple", "Orange", "Grape", "Peach", "Strawberry","Apple", "Orange", "Grape", "Peach", "Strawberry","Apple", "Orange", "Grape", "Peach", "Strawberry","Apple", "Orange", "Grape", "Peach", "Strawberry","Apple", "Orange", "Grape", "Peach", "Strawberry")
             LazyColumn {
                 itemsIndexed(fruits) { index, fruit ->
                     ListItem(

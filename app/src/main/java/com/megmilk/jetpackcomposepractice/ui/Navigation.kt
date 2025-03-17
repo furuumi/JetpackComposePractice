@@ -10,7 +10,7 @@ import com.megmilk.jetpackcomposepractice.ui.screen.detail.DetailScreen
 import com.megmilk.jetpackcomposepractice.ui.screen.top.TopScreen
 
 enum class Screen(val route: String, val title: String) {
-    TOP("top", "トップ"),
+    TOP("home", "ホーム"),
     DETAIL("detail", "詳細"),
 }
 

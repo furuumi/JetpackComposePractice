@@ -2,24 +2,29 @@ package com.megmilk.jetpackcomposepractice.ui.screen.detail
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -43,63 +48,86 @@ fun DetailScreen(title: String, text: String, onClick: () -> Unit) {
     DetailScreen(title, text, viewModel, onClick)
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun DetailScreen(title: String, text: String, viewModel: DetailViewModel, onClick: () -> Unit) {
-    Surface(
-        modifier = Modifier.fillMaxSize(),// fillMaxSizeは、画面いっぱいに表示するための関数
-        color = MaterialTheme.colorScheme.secondary// colorSchemeは、Material Designの色を設定するための関数
-    ) {
-        Column {
-            Text(text = title, modifier = Modifier.height(40.dp).width(100.dp))
-            TextFieldSample()
-            Image(painter = painterResource(id = R.drawable.ic_launcher_foreground), contentDescription = "イラスト屋")
-            Text(text = text, modifier = Modifier.height(40.dp).width(100.dp))
-            Text(text = viewModel.getInfo(), modifier = Modifier.background(
-                Color(0xFF00FF00)
-            ))
-            Text("Modifier",
-                modifier = Modifier.padding(
-                    horizontal = 16.dp,// 左右
-                    vertical = 45.dp// 上下
-                ).background(
-                    Color(color = 0xFF00FF00)
-                )
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text(title) },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primary, // 背景色
+                    titleContentColor = MaterialTheme.colorScheme.onPrimary, // タイトルの文字色
+                    navigationIconContentColor = MaterialTheme.colorScheme.onPrimary, // 戻るボタンの色
+                    actionIconContentColor = MaterialTheme.colorScheme.onPrimary // 右側のアクションアイコンの色 (もしあれば)
+                ),
+                navigationIcon = {
+                    IconButton(onClick = onClick) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Localized description"
+                        )
+                    }
+                }
             )
-            // 余白を開ける
-            Spacer(Modifier.size(16.dp))
-            Button(
-                onClick = {
-                    println("call")
-                },
-                // Uses ButtonDefaults.ContentPadding by default
-                contentPadding = PaddingValues(
-                    start = 20.dp,
-                    top = 12.dp,
-                    end = 20.dp,
-                    bottom = 12.dp
-                )
-            ) {
-                // Inner content including an icon and a text label
-                Icon(
-                    Icons.Filled.Favorite,
-                    contentDescription = "Favorite",
-                    modifier = Modifier.size(ButtonDefaults.IconSize)
-                )
-                Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                Text("Like")
-            }
-            // 余白を開ける
-            Spacer(Modifier.size(16.dp))
-            ExtendedFloatingActionButton(
-                onClick = onClick,
-                icon = {
-                    Icon(
-                        Icons.Default.Done,
-                        contentDescription = "Favorite"
+        }
+    ) { innerPadding ->
+        Box(
+            modifier = Modifier
+                .padding(innerPadding)
+        ) {
+            Column {
+                Text(text = title, modifier = Modifier.height(40.dp).width(100.dp))
+                TextFieldSample()
+                Image(painter = painterResource(id = R.drawable.ic_launcher_foreground), contentDescription = "イラスト屋")
+                Text(text = text, modifier = Modifier.height(40.dp).width(100.dp))
+                Text(text = viewModel.getInfo(), modifier = Modifier.background(
+                    Color(0xFF00FF00)
+                ))
+                Text("Modifier",
+                    modifier = Modifier.padding(
+                        horizontal = 16.dp,// 左右
+                        vertical = 45.dp// 上下
+                    ).background(
+                        Color(color = 0xFF00FF00)
                     )
-                },
-                text = { Text("次へ") }
-            )
+                )
+                // 余白を開ける
+                Spacer(Modifier.size(16.dp))
+                Button(
+                    onClick = {
+                        println("call")
+                    },
+                    // Uses ButtonDefaults.ContentPadding by default
+                    contentPadding = PaddingValues(
+                        start = 20.dp,
+                        top = 12.dp,
+                        end = 20.dp,
+                        bottom = 12.dp
+                    )
+                ) {
+                    // Inner content including an icon and a text label
+                    Icon(
+                        Icons.Filled.Favorite,
+                        contentDescription = "Favorite",
+                        modifier = Modifier.size(ButtonDefaults.IconSize)
+                    )
+                    Spacer(Modifier.size(ButtonDefaults.IconSpacing))
+                    Text("Like")
+                }
+                // 余白を開ける
+                Spacer(Modifier.size(16.dp))
+                ExtendedFloatingActionButton(
+                    onClick = onClick,
+                    icon = {
+                        Icon(
+                            Icons.Default.Done,
+                            contentDescription = "Favorite"
+                        )
+                    },
+                    text = { Text("次へ") }
+                )
+            }
         }
     }
 }
